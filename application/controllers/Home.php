@@ -28,6 +28,7 @@ public function visimisi($id_kandidat)
     $this->load->view('templates/header', $data);
     $this->load->view('visimisi', $data);
     $this->load->view('templates/footer');
+	
 }
 public function pilih_kandidat()
 {
