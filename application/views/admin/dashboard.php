@@ -4,14 +4,14 @@
           <!-- small box -->
           <div class="small-box bg-aqua">
             <div class="inner">
-              <h3>150</h3>
+              <h3><?php echo $total_user ?></h3>
 
               <p>Total User</p>
             </div>
             <div class="icon">
               <i class="ion ion-person-add"></i>
             </div>
-            <a href="#" class="small-box-footer"> Klik untuk info selanjutnya <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="<?php echo site_url('admin/user'); ?>" class="small-box-footer"> Klik untuk info selanjutnya <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <!-- ./col -->
@@ -19,14 +19,14 @@
           <!-- small box -->
           <div class="small-box bg-green">
             <div class="inner">
-              <h3>53</h3>
+              <h3><?php echo $total_suara ?></h3>
 
               <p>Total Pemilih</p>
             </div>
             <div class="icon">
               <i class="ion ion-stats-bars"></i>
             </div>
-            <a href="#" class="small-box-footer">Klik untuk info selanjutnya <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="<?php echo site_url('admin/suara'); ?>" class="small-box-footer">Klik untuk info selanjutnya <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
 
@@ -39,17 +39,22 @@
               </div>
               </div>
               </div>
-        <canvas id="ChartHasilSuara" width="400" height="400"></canvas>
+        <canvas id="ChartHasilSuara" height="100"></canvas>
+        
 </section>
 <script>
-const ctx = document.getElementById('ChartHasilSuara').getContext('2d');
-const myChart = new Chart(ctx, {
+var ctx = document.getElementById('ChartHasilSuara').getContext('2d');
+var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
         labels: ['Calon ke-1', 'Calon ke-2', 'Calon ke-3'],
         datasets: [{
             label: '# Hasil Suara',
-            data: [20, 20, 20],
+            data: [
+                <?php echo $kandidat1 ?>,
+                <?php echo $kandidat2 ?>,
+                <?php echo $kandidat3 ?>,
+                ],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
