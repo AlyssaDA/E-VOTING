@@ -11,7 +11,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Scada&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="<?php echo base_url('assets/'); ?>css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo base_url('assets/'); ?>css/style.css">
-    
+    <style>
+        .img-circle {
+            display: block;
+            border-radius: 50%;
+            margin:20px auto;
+        }
+    </style>
     
   <script src="<?php echo base_url('assets/'); ?>js/Chart.min.js"></script>
 
@@ -35,7 +41,7 @@
         <a class="nav-link nav-active active" href="#">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link nav-active" href="#">Voting</a>
+        <a class="nav-link nav-active" href="#sec2">Voting</a>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
