@@ -52,6 +52,7 @@
           <a href="<?php echo site_url('auth/logout'); ?>">
             <i class="fa fa-sign-out"></i> <span>Logout</span>
             </a>
+	
 </li>          
 </ul>
     </section>
