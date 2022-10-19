@@ -1,8 +1,8 @@
-<<section class="content">
+<section class="content">
 <div class="box">
             <div class="box-header">
               <?php echo $this->session->flashdata('message'); ?>
-              <h3 class="box-title"><?php echo $title ?></h3>
+              <a href="<?php echo site_url('admin/user/tambah');?> " class="btn bg-maroon"><i class="fa fa-plus-circle"></i>Tambah User</a>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -10,9 +10,12 @@
                 <thead>
                 <tr>
                   <th>#</th>
-                  <th>Nama User</th>
-                  <th>Nama Kandidat</th>
-                  <th>Created</th>
+                  <th>Kelas</th>
+                  <th>Nama</th>
+                  <th>Email</th>
+                  <th>Status</th>
+                  <th>Level</th>
+                  <th>Aksi</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -21,14 +24,23 @@
                   ?>
                   <tr>
                     <td><?php echo $no++ ?></td>
+                    <td><?php echo $row->nama_kelas ?></td>
                     <td><?php echo $row->nama_user ?></td>
-                    <td><?php echo $row->nama_kandidat ?></td>
-                    <td><?php echo $row-> created ?></td>
+                    <td><?php echo $row->email ?></td>
                     <td>
-                      <a href="<?php echo site_url('admin/visi_misi/hapus/' . $row->id_suara); ?>" class="btn btn-sm
-                      btn-danger" onclick="return confirm('Yakin Mau Dihapus?!')"><i class="fa fa-trash-o"></i></a>
-        
-                    </td>
+                      <?php if ($row->status == 1){ ?>
+                        <button type="button" class="btn btn-warning"><i class="fa fa-check"></i> Sudah Memilih</button>
+                        <?php }else {?>
+                          <button type="button" class="btn btn-danger"><i class="fa fa-pencil"></i> Belum Memilih</button>
+                          <?php } ?>
+                        </td>
+                        <td><?php echo $row->level ?></td>
+                        <td>
+                      <a href="<?php echo site_url('admin/user/edit/' . $row->id_user); ?>" class="btn btn-sm
+                      btn-info"><i class="fa fa-pencil-square-o"></i></a>
+                      <a onclick="return confirm('Yakin mau dihapus?!')" href="<?php echo site_url('admin/user/hapus/' . $row->id_user); ?>" class="btn btn-sm
+                      btn-danger"><i class="fa fa-trash"></i></a>
+                    </td> 
 
 </tr>
 <?php endforeach; ?>
