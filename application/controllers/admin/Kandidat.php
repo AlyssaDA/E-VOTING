@@ -48,5 +48,6 @@ $this->session->set_flashdata('message', '
 redirect('admin/kandidat');
     }
     }
+	
 
 }

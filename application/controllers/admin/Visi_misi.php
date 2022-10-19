@@ -94,5 +94,4 @@ $this->session->set_flashdata('message', '
 redirect('admin/visi_misi');
     }
     }
-
 }
