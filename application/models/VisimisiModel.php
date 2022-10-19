@@ -32,4 +32,5 @@ public function update()
   $this->db->where('id', $this->input->post('id'));
 $this->db->update('visimisi', $data);
 }
+	
 }
