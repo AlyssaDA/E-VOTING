@@ -1,84 +1,102 @@
-<section class="sec1" id="sec1">
-<div class="container">
-    <div class="row">
-    <div class="col-md-6">
-        <h2 class="display-4 text-primary mt-5 h2-sec1">Selamat Datang <br> Di E-Voting</h2>
-        <p class="text-secondary">Silahkan gunakan hak suara kalian untuk </br> menentukan ketua terbaru</P>
-<a href="" class="btn btn-primary"data-toggle="modal" data-target="#modalLogin">Login Disini</a>
-<a href="#sec2" class="btn btn-secondary">Buat Akun?</a>
-</div>
-<div class="col-md-6">
-    <img src="<?php echo base_url('assets/img/hero1.png'); ?>" class="img-fluid">
-        </div>
-    </div>
-</div>
-</section>
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-<section class="sec2" id="sec2">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6">
-                <img src="<?php echo base_url('assets/img/hero2.png'); ?>" class="img-fluid">
-             </div>
-             <div class="col-md-6">
-                <h2 class="text-primary h2-sec2">Belum Punya Akun?</h2>
-                <p class="text-secondary p-sec2">Silahkan daftarkan diri anda di form dibawah ini, jika sudah silahkan login lalu pilih menu voting.</p>
+class Auth extends CI_Controller 
+{
+    public function __construct()
+    {
+        parent::__construct();
+        $this->load->library('form_validation');
+    }
+
+    public function index()
+    {
+$data['title'] = 'Auth';
+$data['kelas'] = $this->db->get('kelas')->result();
+$this->load->view('templates/header', $data);
+        $this->load->view('auth', $data);
+        $this->load->view('templates/footer');
+    }
+    
+    public function registrasi()
+    {
+        $this->form_validation->set_rules('nama','Nama','trim|required', [
+            'required' => '%s masih kosong'
+        ]);
+
+        $this->form_validation->set_rules('email','Email','trim|required|is_unique[user.email] ', [
+            'required' => '%s masih kosong'
             
-                <form action="<?php echo site_url('auth/registrasi'); ?>" method="post">
-                    <div class="form-group">
-                        <label for="nama" class="text-secondary">Nama *</label>
-                        <input type="text" name="nama" id="nama" class="form-control" value="<?php echo set_value('nama') ?>">
-                        <?php echo form_error('nama', '<span class="text-danger small pl-3">', '</span>'); ?>
-                    </div>
-                    <div class="form-group">
-                        <label for="email" class="text-secondary">Email *</label>
-                        <input type="text" name="email" id="email" class="form-control" value="<?php echo set_value('email') ?>">
-                        <?php echo form_error('email', '<span class="text-danger small pl-3">', '</span>'); ?>
-                    </div>
-                    <div class="form-group">
-                        <label for="password" class="text-secondary">Password *</label>
-                        <input type="password" name="password" id="password" class="form-control">
-                        <?php echo form_error('password', '<span class="text-danger small pl-3">', '</span>'); ?>
-                    </div>
-                    <div class="form-group">
-                        <label for="id_kelas" class="text-secondary">Kelas *</label>
-                        <select name="id_kelas" id="id_kelas" class="form-control">
-                          <?php foreach ($kelas as $kls) : ?>
-                            <option value="<?php echo $kls->id ?>"><?php echo $kls->nama ?></option>
-                            <?php endforeach; ?>
-</select>
-</div>
-<button type="submit" class="btn-primary">Registrasi Akun</button>
-                </form>
-            </div>
-        </div>
-    </div>
+        ]);
 
-</section>
-<!-- Modal -->
-<div class="modal fade" id="modalLogin" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Form Login</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-<form action="<?php echo site_url('auth/login'); ?>" method="post">
-  <div class="form-group">
-    <label class="text-secondary" for="email1">Email *</label>
-    <input type="email" name="email1" id="email1" class="form-control" required>
-      </div>
-      <div class="form-group">
-    <label class="text-secondary"for="password1">Password *</label>
-    <input type="password" name="password1" id="password1" class="form-control" required>
-      </div>
-      <button type="submit" class="btn btn-primary">Login</button>
-      
-      </div>
-    </div>
-  </div>
-</div>
+        $this->form_validation->set_rules('password','Password','trim|required', [
+            'required' => '%s masih kosong'
+        ]);
+        
+        if ($this->form_validation->run() == FALSE) {
+        $this->index();
+        }else {
+            
+    $data = [
+        'id_kelas' => $this->input->post('id_kelas', true),
+        'nama' => $this->input->post('nama', true),
+        'email' => $this->input->post('email', true),
+        'password' => password_hash($this->input->post('password', true), PASSWORD_DEFAULT),
+        'level' => 'siswa'
+    ];
+    $this->db->insert('user', $data);
+    if ($this->db->affected_rows() > 0) {
+        echo "<script>
+        alert('Akun berhasil di registrasi');
+        window.location.href ='" . site_url('auth') . "';
+        </script>";
+    }
+        }
+    }
+public function login()
+{
+$cek_email = $this->db->get_where('user', ['email' => $this->input->post('email1', true)])->row();
+
+if ($cek_email) { //jika emailnya ada
+    if(password_verify($this->input->post('password1'), $cek_email->password)){ //jika password sama
+
+      if($cek_email->level == 'admin') { //admin
+        $data_session =[
+        'id' => $cek_email->id,
+        'nama' => $cek_email->nama,
+        'level'=> $cek_email->level,
+    ];
+$this->session->set_userdata($data_session);
+redirect('admin/dashboard');
+  
+} else { //siswa    
+    $data_session =[
+        'id' => $cek_email->id,
+        'nama' => $cek_email->nama,
+        'level'=> $cek_email->level,
+    ];
+    $this->session->set_userdata($data_session);
+redirect('home');    
+
+}
+    } else { //jika tidak
+        echo "<script>
+        alert('Password anda salah');
+        window.location.href ='" . site_url('auth') . "';
+        </script>";
+    }
+} else { //jika tidak
+    echo "<script>
+    alert('Email anda salah');
+    window.location.href ='" . site_url('auth') . "';
+    </script>";
+
+              }
+        }
+        public function logout()
+        {
+            $this->session->sess_destroy();
+            redirect('auth');
+        }
+    }
   
